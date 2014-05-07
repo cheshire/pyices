@@ -1,3 +1,6 @@
 *.swp
 *.pyc
 *.ropeproject
+build
+*.egg-info
+yices_lib.py

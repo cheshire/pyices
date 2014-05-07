@@ -4,12 +4,12 @@ from pyices.expression import YicesExpression
 from pyices.context import YicesContext
 import pyices.fix_env
 
-class PyicesTests(unittest.TestCase):
 
+class PyicesTests(unittest.TestCase):
     def testConversion(self):
-        x = YicesExpression.from_real_val("x")
-        y = YicesExpression.from_real_val("y")
-        z = YicesExpression.from_real_val("z")
+        x = YicesExpression.from_real_var("x")
+        y = YicesExpression.from_real_var("y")
+        z = YicesExpression.from_real_var("z")
 
         expr = (x == y + z) & (z >= 10) & (y >= 5)
 
@@ -177,3 +177,6 @@ class PyicesTests(unittest.TestCase):
         )
 
         ctx.pop()
+
+if __name__ == '__main__':
+    unittest.main()

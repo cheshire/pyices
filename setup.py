@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import os, sys
+import os
+import sys
 import subprocess
 
 from setuptools import setup, find_packages
@@ -9,6 +10,7 @@ from setuptools.command.easy_install import main as install_package
 
 VAR_NAME = 'YICES_PATH'
 PKG_NAME = 'pyices'
+
 
 class PyicesInstaller(install):
 
@@ -24,12 +26,12 @@ class PyicesInstaller(install):
     def _hardcode_env_variables(self, yices_path):
         """
         NOTE: Incredibly hack-ish, but I can't think of a better solution.
-        Modify in-place the `src/__init__.py` file so it would set environmental
-        variables properly, depending on the $YICES_PATH var.
+        Modify in-place the `src/__init__.py` file so it would set
+        environmental variables properly, depending on the $YICES_PATH var.
         """
-        f = open('%s/fix_env.py' % PKG_NAME, 'w+')
+        f = open('%s/fix_env.py' % PKG_NAME, 'a+')
         f.write(
-            "yices_lib_path = %s" % os.path.join(yices_path, 'lib/')
+            "yices_lib_path = '%s'" % os.path.join(yices_path, 'lib/')
         )
         f.write(
             """
@@ -50,7 +52,7 @@ os.environ['PYTHONPATH'] = '%s:%s' % (yices_lib_path, p_path)
         header = os.path.join(yices_path, 'include/yices.h')
         lib_path = os.path.join(yices_path, 'lib')
         subprocess.call(
-            ['ctypesgen.py', '-L', lib_path, '-l', 'yices', yices_path,
+            ['ctypesgen.py', '-L', lib_path, '-l', 'yices', header,
              '-o', '%s/yices_lib.py' % PKG_NAME])
 
     def _ensure_ctypesgen(self):
@@ -66,7 +68,7 @@ os.environ['PYTHONPATH'] = '%s:%s' % (yices_lib_path, p_path)
             sys.stderr.write(
                 'ctypesgen.py not found in $PATH, attempting installation'
             )
-            install_package(['ctypesgen.py'])
+            install_package(['ctypesgen'])
         except subprocess.CalledProcessError:
             sys.stderr.write(
                 'ctypesgen.py is installed, but not functioning properly, '
