@@ -1,0 +1,2 @@
+recursive-include pyices *.py
+include README.md
